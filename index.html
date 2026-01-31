@@ -1,0 +1,76 @@
+// File: index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>THE_GRID | ISO_BUILD V6.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --obsidian: #050608;
+            --neon-cyan: #00ffff;
+            --rinzler-red: #ff4444;
+            --glass: rgba(255, 255, 255, 0.03);
+        }
+        body {
+            background-color: var(--obsidian);
+            color: white;
+            font-family: 'JetBrains Mono', monospace;
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+        .orbitron { font-family: 'Orbitron', sans-serif; }
+        .aegis-strip {
+            background: rgba(0, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            z-index: 100;
+        }
+        .cyber-card {
+            background: var(--glass);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+        .cyber-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 2px; height: 100%;
+            background: var(--neon-cyan);
+            box-shadow: 0 0 10px var(--neon-cyan);
+        }
+    </style>
+</head>
+<body class="p-0 m-0">
+
+    <nav id="aegis-strip" class="aegis-strip fixed top-0 w-full p-4 cursor-pointer text-center">
+        </nav>
+
+    <main class="pt-24 pb-12 px-6 max-w-7xl mx-auto space-y-8">
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div id="mission-status" class="cyber-card p-6"></div>
+            <div id="hydration-module" class="cyber-card p-6"></div>
+        </div>
+
+        <div class="cyber-card p-6">
+            <h2 class="orbitron text-xs font-bold tracking-[0.3em] mb-4 text-cyan-400">FINANCIAL_MATRIX (30_DAY)</h2>
+            <div id="financial-matrix" class="w-full overflow-x-auto"></div>
+        </div>
+
+        <div class="cyber-card p-6">
+            <h2 class="orbitron text-xs font-bold tracking-[0.3em] mb-4 text-cyan-400">TOOL_REPOSITORY</h2>
+            <div id="tool-table-container"></div>
+        </div>
+
+        <div id="reading-vault-container" class="cyber-card p-6 border-red-500/20"></div>
+
+    </main>
+
+    <script type="module" src="./App.js"></script>
+
+</body>
+</html>
