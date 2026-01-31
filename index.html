@@ -3,95 +3,256 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>THE_GRID | ISO_BUILD V6.0</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
-    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="THE GRID">
+    <link rel="apple-touch-icon" href="https://img.icons8.com/neon/180/00d9ff/disc.png">
+    <link rel="apple-touch-startup-image" href="https://img.icons8.com/neon/600/00d9ff/disc.png">
+    <title>TRON ISO_BUILD V6.0</title>
     <style>
         :root {
-            --obsidian: #050608;
-            --neon-cyan: #00ffff;
-            --rinzler-red: #ff4444;
-            --glass: rgba(255, 255, 255, 0.03);
+            --neon-blue: #00d9ff;
+            --dark-bg: #050608;
+            --card-bg: rgba(10, 12, 18, 0.95);
+            --grid-line: rgba(0, 217, 255, 0.08);
+            --danger: #ff4444;
+            --scanline-color: rgba(0, 217, 255, 0.03);
         }
-        
+
+        /* ========== SCANLINE ANIMATIONS ========== */
+        body::before {
+            content: " "; display: block; position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(var(--scanline-color) 50%, rgba(0, 0, 0, 0) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+            z-index: 9999; background-size: 100% 4px, 3px 100%; pointer-events: none;
+        }
+
+        @keyframes scanlineMove { 0% { transform: translateY(0); } 100% { transform: translateY(100vh); } }
+        body::after {
+            content: ""; position: fixed; top: -100px; left: 0; width: 100%; height: 100px;
+            background: rgba(0, 217, 255, 0.05); animation: scanlineMove 8s linear infinite;
+            z-index: 10000; pointer-events: none;
+        }
+
+        /* ========== BASE LAYOUT ========== */
         body {
-            background-color: var(--obsidian);
-            color: white;
-            font-family: 'JetBrains Mono', monospace;
-            margin: 0; padding: 0;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
+            background-color: var(--dark-bg);
+            background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 40px 40px; color: white; font-family: 'Segoe UI', 'Courier New', monospace;
+            margin: 0; padding: 20px; overflow-x: hidden; -webkit-tap-highlight-color: transparent;
         }
 
-        .orbitron { font-family: 'Orbitron', sans-serif; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 2px solid var(--neon-blue); padding-bottom: 10px; }
+        h1 { margin: 0; text-transform: uppercase; letter-spacing: 3px; color: var(--neon-blue); font-size: 1.5rem; text-shadow: 0 0 10px var(--neon-blue); animation: glitch 5s infinite; }
 
-        .aegis-strip {
-            background: rgba(0, 255, 255, 0.05);
-            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
-            backdrop-filter: blur(15px);
-            z-index: 1000;
+        @keyframes glitch {
+            0% { text-shadow: 2px 2px var(--danger), -2px -2px var(--neon-blue); }
+            2% { text-shadow: -2px 2px var(--danger), 2px -2px var(--neon-blue); }
+            4% { text-shadow: 2px 2px var(--danger), -2px -2px var(--neon-blue); }
+            5% { text-shadow: 0 0 10px var(--neon-blue); }
         }
 
-        .cyber-card {
-            background: var(--glass);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-            position: relative;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-        }
+        /* ========== CARDS ========== */
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; }
+        .card { background: var(--card-bg); border: 1px solid var(--neon-blue); padding: 15px; border-radius: 2px; cursor: pointer; backdrop-filter: blur(5px); transition: 0.3s; }
+        .card:hover { box-shadow: 0 0 15px var(--neon-blue); transform: translateY(-2px); }
+        .card.active-focus { animation: focusPulse 4s infinite ease-in-out; }
+        @keyframes focusPulse { 0%, 100% { box-shadow: 0 0 5px var(--neon-blue); } 50% { box-shadow: 0 0 25px var(--neon-blue); } }
 
-        .cyber-card::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 2px; height: 100%;
-            background: var(--neon-cyan);
-            box-shadow: 0 0 10px var(--neon-cyan);
-        }
-
-        [contenteditable] { outline: none; caret-color: var(--neon-cyan); }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: var(--neon-cyan); }
+        /* ========== MODAL & UI ========== */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: flex; justify-content: center; align-items: center; z-index: 100000; }
+        .modal-content { background: var(--card-bg); border: 2px solid var(--neon-blue); width: 95%; max-width: 700px; max-height: 90vh; padding: 20px; border-radius: 8px; overflow-y: auto; position: relative; }
+        .task-item { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; background: rgba(255, 255, 255, 0.05); padding: 10px; border-radius: 4px; border-left: 2px solid transparent; }
+        .task-item.compiling { animation: compile 0.6s infinite; }
+        @keyframes compile { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        button { background: rgba(0, 217, 255, 0.05); border: 1px solid var(--neon-blue); color: var(--neon-blue); padding: 8px 12px; cursor: pointer; border-radius: 4px; font-weight: bold; text-transform: uppercase; font-size: 0.7rem; }
+        button:hover { background: var(--neon-blue); color: black; }
+        .delete-btn { border-color: var(--danger); color: var(--danger); }
+        .node-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        @media (max-width: 600px) { .node-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
-    <nav id="aegis-strip" class="aegis-strip fixed top-0 w-full p-4 flex justify-center items-center">
-        <div class="orbitron text-[10px] tracking-[0.4em] text-cyan-400 font-bold">THE_GRID_SYSTEM_ACTIVE</div>
-    </nav>
+<div class="container">
+    <div class="header">
+        <h1>THE_GRID // V6.0</h1>
+        <div id="currentDate" style="color: var(--neon-blue); font-size: 0.8rem;">BOOTING...</div>
+    </div>
 
-    <main class="pt-24 pb-12 px-6 max-w-7xl mx-auto space-y-8">
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <section id="mission-status" class="cyber-card p-6">
-                <div class="animate-pulse text-xs opacity-50 uppercase">Loading_Protocol...</div>
-            </section>
-            
-            <section id="hydration-module" class="cyber-card p-6">
-                </section>
+    <div class="cards-grid">
+        <div class="card active-focus" onclick="openModal('dailyFocus')">
+            <div style="color:var(--neon-blue); font-size:0.8rem; font-weight:bold;">DAILY FOCUS</div>
+            <div id="dailyPreview">0 ACTIVE NODES</div>
         </div>
+        <div class="card" onclick="openModal('taskBank')">
+            <div style="color:var(--neon-blue); font-size:0.8rem; font-weight:bold;">ARMORY</div>
+            <div>INJECT TEMPLATES</div>
+        </div>
+        <div class="card" onclick="openModal('weekly')">
+            <div style="color:var(--neon-blue); font-size:0.8rem; font-weight:bold;">7-DAY PROTOCOL</div>
+            <div id="weeklyPreview">FLIGHT PLAN</div>
+        </div>
+        <div class="card" onclick="openModal('study')">
+            <div style="color:var(--neon-blue); font-size:0.8rem; font-weight:bold;">STUDY NODES</div>
+            <div id="studyPreview">4 TRACKS</div>
+        </div>
+        <div class="card" onclick="openModal('workout')">
+            <div style="color:var(--neon-blue); font-size:0.8rem; font-weight:bold;">HEALTH</div>
+            <div id="workoutPreview">0L</div>
+        </div>
+        <div class="card" onclick="openModal('subscriptions')">
+            <div style="color:var(--neon-blue); font-size:0.8rem; font-weight:bold;">SUBSCRIPTIONS</div>
+            <div id="subPreview">38 TOOLS</div>
+        </div>
+    </div>
 
-        <section class="cyber-card p-6">
-            <h2 class="orbitron text-xs font-bold tracking-[0.3em] mb-6 text-cyan-400">FINANCIAL_MATRIX.sys</h2>
-            <div id="financial-matrix" class="w-full overflow-x-auto">
-                <div class="text-xs opacity-30">Initializing_Grid...</div>
-            </div>
-        </section>
+    <div style="text-align:center; margin-top:40px; opacity:0.4;">
+        <button class="delete-btn" onclick="wipeGrid()">☢ DEREZ SYSTEM</button>
+        <div style="margin-top:10px; font-size:0.7rem; color:var(--neon-blue);">GRID SYNC: <span id="syncStatus">ACTIVE</span></div>
+    </div>
+</div>
 
-        <section class="cyber-card p-6">
-            <h2 class="orbitron text-xs font-bold tracking-[0.3em] mb-6 text-cyan-400">TOOL_REPOSITORY.bin</h2>
-            <div id="tool-table-container">
-                </div>
-        </section>
+<div id="modalContainer"></div>
 
-        <section id="reading-vault-container" class="cyber-card p-6 border-red-500/20 shadow-[0_0_15px_rgba(255,68,68,0.1)]">
-            </section>
+<script>
+    let appData = {
+        dailyFocus: [],
+        taskBank: {
+            chores: ["Deep Clean House", "Inventory/Restock", "House Tidy", "Pets – Daily"],
+            work: ["Instagram – Light", "AI Course – Theory", "Outreach", "Email Wipe"],
+            clients: ["Video Client A", "Video Client B", "App Dev Sync"]
+        },
+        weeklyPlanner: {
+            MON: { mission: "Run + Video Client A (Vid 1/1)", length: "1-2 Hours", userInput: "" },
+            TUE: { mission: "Gym (Arms/Back/Core) + App Dev", length: "2-3 Hours", userInput: "" },
+            WED: { mission: "Run + Video Client B (Vid 1/2)", length: "1-2 Hours", userInput: "" },
+            THU: { mission: "Gym (Legs) + App Dev", length: "2-3 Hours", userInput: "" },
+            FRI: { mission: "Run + Video Client B (Vid 2/2)", length: "1-2 Hours", userInput: "" },
+            SAT: { mission: "Planning & Review + Course Prep", length: "2-4 Hours", userInput: "Week Review" },
+            SUN: { mission: "Gym (Pilates) + Job/Grant Apps", length: "2 Hours", userInput: "Target List" }
+        },
+        study: {
+            math: { name: "Mathematics", url: 'https://www.khanacademy.org/math/' },
+            ai_course: { name: "AI Specialization", url: 'https://platform.outskill.com/' },
+            languages: { name: "Language Protocol", url: 'https://learn.mangolanguages.com/login' },
+            writing: { name: "Writing Analysis", url: '#' }
+        },
+        workout: { waterIntake: 0, dailyroutine: [{name: 'Push-ups (3x15)', completed: false}] },
+        subscriptions: [
+            { name: "Perplexity", url: "https://www.perplexity.ai/" }, { name: "Canva", url: "https://www.canva.com/" },
+            { name: "Julius AI", url: "https://julius.ai/" }, { name: "Lovable", url: "https://lovable.dev" },
+            { name: "Lyzr Studio", url: "https://studio.lyzr.ai/" }, { name: "Fireflies", url: "https://app.fireflies.ai/" },
+            { name: "Phot AI", url: "https://www.phot.ai" }, { name: "Hailuo AI", url: "https://hailuoai.video/" },
+            { name: "Vapi", url: "https://dashboard.vapi.ai/" }, { name: "Writesonic", url: "https://app.writesonic.com/" },
+            { name: "HeyGen", url: "https://app.heygen.com/" }, { name: "Chronicle", url: "https://app.chroniclehq.com/" },
+            { name: "Happenstance", url: "https://happenstance.ai/" }, { name: "MultipleChat", url: "https://multiplechat.ai/" },
+            { name: "Wispr Flow", url: "https://wisprflow.ai/" }, { name: "Retell AI", url: "https://www.retellai.com/" },
+            { name: "ElevenLabs", url: "https://elevenlabs.io/" }, { name: "MeetEmily", url: "https://meetemily.ai/" },
+            { name: "Bolt", url: "https://bolt.new/" }, { name: "LinkedIn", url: "https://www.linkedin.com/" },
+            { name: "OpenAI", url: "https://openai.com/" }, { name: "Pinecone", url: "https://www.pinecone.io/" },
+            { name: "n8n", url: "https://n8n.io/" }, { name: "Dify", url: "https://dify.ai/" },
+            { name: "Gumloop", url: "https://www.gumloop.com/" }, { name: "Google Sheets", url: "https://docs.google.com/spreadsheets" },
+            { name: "Google Labs", url: "https://labs.google/" }, { name: "NotebookLM", url: "https://notebooklm.google/" },
+            { name: "Apify", url: "https://apify.com/" }, { name: "SocialSonic", url: "https://app.socialsonic.com/" },
+            { name: "SuperGrow", url: "https://www.supergrow.ai/" }, { name: "VTurb", url: "https://app.vturb.com/" },
+            { name: "Kiwify", url: "https://dashboard.kiwify.com.br/" }, { name: "GoDaddy", url: "https://dcc.godaddy.com/" },
+            { name: "Hotmart", url: "https://app.hotmart.com/" }, { name: "Atomicat", url: "https://app.atomicat.com.br/" },
+            { name: "Supabase", url: "https://supabase.com/dashboard/" }, { name: "Facebook", url: "https://www.facebook.com/" }
+        ]
+    };
 
-    </main>
+    function init() {
+        const saved = localStorage.getItem('tron_grid_v6');
+        if (saved) { try { appData = JSON.parse(saved); document.getElementById('syncStatus').textContent = 'SYNCED'; } catch(e) { document.getElementById('syncStatus').textContent = 'ERROR'; } }
+        updateDate(); updatePreviews();
+    }
 
-    <script type="module" src="./App.js"></script>
+    function saveData() { localStorage.setItem('tron_grid_v6', JSON.stringify(appData)); updatePreviews(); document.getElementById('syncStatus').textContent = 'SYNCED'; }
 
+    function updateDate() { const o = { weekday: 'long', month: 'short', day: 'numeric' }; document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', o).toUpperCase(); }
+
+    function updatePreviews() {
+        document.getElementById('dailyPreview').textContent = `${appData.dailyFocus.filter(t=>!t.completed).length} ACTIVE NODES`;
+        document.getElementById('workoutPreview').textContent = `${appData.workout.waterIntake}L`;
+    }
+
+    function openModal(type) {
+        const container = document.getElementById('modalContainer');
+        let content = '';
+        if(type==='dailyFocus') content = renderDaily();
+        else if(type==='taskBank') content = renderBank();
+        else if(type==='weekly') content = renderWeekly();
+        else if(type==='study') content = renderStudyBank();
+        else if(type==='workout') content = renderWorkout();
+        else if(type==='subscriptions') content = renderSubBank();
+        container.innerHTML = `<div class="modal" onclick="if(event.target === this) closeModal()"><div class="modal-content"><button style="float:right" onclick="closeModal()">×</button>${content}</div></div>`;
+    }
+
+    function closeModal() { document.getElementById('modalContainer').innerHTML = ''; }
+
+    function injectToDaily(name) {
+        const id = Date.now();
+        appData.dailyFocus.push({ id, text: "⚡ COMPILING...", completed: false, isCompiling: true });
+        saveData(); openModal('dailyFocus');
+        setTimeout(() => {
+            const t = appData.dailyFocus.find(x => x.id === id);
+            if(t) { t.text = name; t.isCompiling = false; }
+            saveData(); openModal('dailyFocus');
+        }, 600);
+    }
+
+    function renderDaily() {
+        return `<h2>DAILY FOCUS</h2>` + appData.dailyFocus.map((t,i)=>`
+            <div class="task-item ${t.isCompiling?'compiling':''}">
+                <input type="checkbox" ${t.completed?'checked':''} onchange="appData.dailyFocus[${i}].completed=!appData.dailyFocus[${i}].completed; saveData(); openModal('dailyFocus')">
+                <span style="flex:1; ${t.completed?'text-decoration:line-through; opacity:0.5':''}">${t.text}</span>
+                <button class="delete-btn" onclick="appData.dailyFocus.splice(${i},1); saveData(); openModal('dailyFocus')">🗑</button>
+            </div>`).join('') + `<button onclick="appData.dailyFocus=[]; saveData(); openModal('dailyFocus')">Clear All</button>`;
+    }
+
+    function renderBank() {
+        return `<h2>ARMORY</h2>` + Object.entries(appData.taskBank).map(([key, list]) => `
+            <h3 style="color:var(--neon-blue)">${key.toUpperCase()}</h3>
+            <div class="node-grid">${list.map(t => `<button onclick="injectToDaily('${t}')">➕ ${t}</button>`).join('')}</div>
+        `).join('');
+    }
+
+    function renderWeekly() {
+        return `<h2>7-DAY PROTOCOL</h2>` + Object.entries(appData.weeklyPlanner).map(([day, d]) => `
+            <div style="border-left: 2px solid var(--neon-blue); padding:10px; margin-bottom:10px; background:rgba(0,217,255,0.05)">
+                <strong>${day}</strong>: ${d.mission} <br>
+                <button onclick="injectToDaily('${d.mission}')">Inject Mission</button>
+            </div>`).join('');
+    }
+
+    function renderStudyBank() {
+        return `<h2>STUDY</h2>` + Object.entries(appData.study).map(([k, d]) => `<div class="task-item" onclick="window.open('${d.url}')">${d.name} 🔗</div>`).join('');
+    }
+
+    function renderWorkout() {
+        return `<h2>HEALTH</h2>
+            <h3>Water: ${appData.workout.waterIntake}L</h3>
+            <button onclick="appData.workout.waterIntake+=0.5; saveData(); openModal('workout')">+0.5L</button>
+            <button onclick="appData.workout.waterIntake=0; saveData(); openModal('workout')">Reset</button>`;
+    }
+
+    function renderSubBank() {
+        return `<h2>NODES</h2><div class="node-grid">` + appData.subscriptions.map(s => `<button onclick="window.open('${s.url}')">${s.name}</button>`).join('') + `</div>`;
+    }
+
+    function wipeGrid() { if(confirm("DEREZ GRID?")) { localStorage.removeItem('tron_grid_v6'); location.reload(); } }
+
+    init();
+</script>
+    <div id="modal-overlay" class="fixed inset-0 bg-black/90 backdrop-blur-md hidden z-[2000] flex items-center justify-center p-6">
+        <div id="modal-content" class="cyber-card w-full max-w-2xl p-8 relative">
+            <button onclick="window.closeModal()" class="absolute top-4 right-4 text-cyan-400 hover:text-white orbitron text-xs">CLOSE [X]</button>
+            <div id="modal-body"></div>
+        </div>
+    </div>
 </body>
 </html>
 
