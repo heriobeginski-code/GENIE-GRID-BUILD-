@@ -20,15 +20,13 @@
             background-color: var(--obsidian);
             color: white;
             font-family: 'JetBrains Mono', monospace;
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
 
         .orbitron { font-family: 'Orbitron', sans-serif; }
 
-        /* HUD Components */
         .aegis-strip {
             background: rgba(0, 255, 255, 0.05);
             border-bottom: 1px solid rgba(0, 255, 255, 0.2);
@@ -52,12 +50,7 @@
             box-shadow: 0 0 10px var(--neon-cyan);
         }
 
-        /* iPad Optimization */
-        [contenteditable] {
-            outline: none;
-            caret-color: var(--neon-cyan);
-        }
-
+        [contenteditable] { outline: none; caret-color: var(--neon-cyan); }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: var(--neon-cyan); }
     </style>
@@ -92,4 +85,13 @@
                 </div>
         </section>
 
-        <section id="reading-vault-container" class="cyber-card p-6 border-
+        <section id="reading-vault-container" class="cyber-card p-6 border-red-500/20 shadow-[0_0_15px_rgba(255,68,68,0.1)]">
+            </section>
+
+    </main>
+
+    <script type="module" src="./App.js"></script>
+
+</body>
+</html>
+
