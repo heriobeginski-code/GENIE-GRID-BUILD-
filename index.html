@@ -1,12 +1,13 @@
-// File: index.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>THE_GRID | ISO_BUILD V6.0</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --obsidian: #050608;
@@ -14,27 +15,35 @@
             --rinzler-red: #ff4444;
             --glass: rgba(255, 255, 255, 0.03);
         }
+        
         body {
             background-color: var(--obsidian);
             color: white;
             font-family: 'JetBrains Mono', monospace;
+            margin: 0;
+            padding: 0;
             overflow-x: hidden;
-            touch-action: manipulation;
+            -webkit-font-smoothing: antialiased;
         }
+
         .orbitron { font-family: 'Orbitron', sans-serif; }
+
+        /* HUD Components */
         .aegis-strip {
             background: rgba(0, 255, 255, 0.05);
             border-bottom: 1px solid rgba(0, 255, 255, 0.2);
             backdrop-filter: blur(15px);
-            z-index: 100;
+            z-index: 1000;
         }
+
         .cyber-card {
             background: var(--glass);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 4px;
             position: relative;
-            overflow: hidden;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
         }
+
         .cyber-card::before {
             content: "";
             position: absolute;
@@ -42,35 +51,45 @@
             background: var(--neon-cyan);
             box-shadow: 0 0 10px var(--neon-cyan);
         }
+
+        /* iPad Optimization */
+        [contenteditable] {
+            outline: none;
+            caret-color: var(--neon-cyan);
+        }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--neon-cyan); }
     </style>
 </head>
-<body class="p-0 m-0">
+<body>
 
-    <nav id="aegis-strip" class="aegis-strip fixed top-0 w-full p-4 cursor-pointer text-center">
-        </nav>
+    <nav id="aegis-strip" class="aegis-strip fixed top-0 w-full p-4 flex justify-center items-center">
+        <div class="orbitron text-[10px] tracking-[0.4em] text-cyan-400 font-bold">THE_GRID_SYSTEM_ACTIVE</div>
+    </nav>
 
     <main class="pt-24 pb-12 px-6 max-w-7xl mx-auto space-y-8">
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div id="mission-status" class="cyber-card p-6"></div>
-            <div id="hydration-module" class="cyber-card p-6"></div>
+            <section id="mission-status" class="cyber-card p-6">
+                <div class="animate-pulse text-xs opacity-50 uppercase">Loading_Protocol...</div>
+            </section>
+            
+            <section id="hydration-module" class="cyber-card p-6">
+                </section>
         </div>
 
-        <div class="cyber-card p-6">
-            <h2 class="orbitron text-xs font-bold tracking-[0.3em] mb-4 text-cyan-400">FINANCIAL_MATRIX (30_DAY)</h2>
-            <div id="financial-matrix" class="w-full overflow-x-auto"></div>
-        </div>
+        <section class="cyber-card p-6">
+            <h2 class="orbitron text-xs font-bold tracking-[0.3em] mb-6 text-cyan-400">FINANCIAL_MATRIX.sys</h2>
+            <div id="financial-matrix" class="w-full overflow-x-auto">
+                <div class="text-xs opacity-30">Initializing_Grid...</div>
+            </div>
+        </section>
 
-        <div class="cyber-card p-6">
-            <h2 class="orbitron text-xs font-bold tracking-[0.3em] mb-4 text-cyan-400">TOOL_REPOSITORY</h2>
-            <div id="tool-table-container"></div>
-        </div>
+        <section class="cyber-card p-6">
+            <h2 class="orbitron text-xs font-bold tracking-[0.3em] mb-6 text-cyan-400">TOOL_REPOSITORY.bin</h2>
+            <div id="tool-table-container">
+                </div>
+        </section>
 
-        <div id="reading-vault-container" class="cyber-card p-6 border-red-500/20"></div>
-
-    </main>
-
-    <script type="module" src="./App.js"></script>
-
-</body>
-</html>
+        <section id="reading-vault-container" class="cyber-card p-6 border-
